@@ -10,6 +10,16 @@ public static class IEnumableExtension
     {
         return data != null && data.Any();
     }
+
+    public static string Join<T>(this IEnumerable<T> values, string quotes = "", string separator = ",")
+    {
+        if (values == null)
+            return string.Empty;
+        var result = new StringBuilder();
+        foreach (var each in values)
+            result.AppendFormat("{0}{1}{0}{2}", quotes, each, separator);
+        return result.ToString().RemoveEnd(separator);
+    }
     public static IEnumerable<T> Concat<T>(this IEnumerable<T> data, IEnumerable<T> others)
     {
         if (data.HasData() && others.HasData())

@@ -12,15 +12,15 @@ namespace PD.LYY.UtilityLib.Serialize
         {
             if(string.IsNullOrEmpty(data)) return default(T);
 
-             
-            
-            
+            return default(T);
+
+
         }
 
       
         public override string Serialize<T>(T data)
         {
-            
+            return default(string);
         }
     }
 }
