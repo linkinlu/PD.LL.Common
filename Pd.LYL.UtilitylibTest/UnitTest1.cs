@@ -1,7 +1,7 @@
 using PD.LYY.UtilityLib;
 using PD.LYY.UtilityLib.Serialize;
 using System.Diagnostics.CodeAnalysis;
-
+using System.Linq;
 namespace Pd.LYL.UtilitylibTest
 {
     public class Tests
@@ -19,15 +19,18 @@ namespace Pd.LYL.UtilitylibTest
 
             var base1 = new JsonSerialize().Deserialize<List<Root>>(a);
             var base2 = new JsonSerialize().Deserialize<List<Root>>(b);
-            var bb = base1.Count == base2.Count;
-            var alreadyExisted = new List<string>();
-            foreach (var item in base2)
-            {
-                var found = base1.FirstOrDefault(g => g.systemProfile.name == item.systemProfile.name);
-                alreadyExisted.Add(found?.systemProfile.name);
-            }
+            
+          
+        }
+            //var bb = base1.Count == base2.Count;
+            //var alreadyExisted = new List<string>();
+            //foreach (var item in base2)
+            //{
+            //    var found = base1.FirstOrDefault(g => g.systemProfile.name == item.systemProfile.name);
+            //    alreadyExisted.Add(found?.systemProfile.name);
+            //}
 
-            var not = base2.Where(g=> !alreadyExisted.Contains(g.systemProfile.name));
+            //var not = base2.Where(g => !alreadyExisted.Contains(g.systemProfile.name));
 
 
 
@@ -38,8 +41,7 @@ namespace Pd.LYL.UtilitylibTest
         {
             public bool Equals(Root? x, Root? y)
             {
-                if (x.systemProfile.name == y.systemProfile.name) return true;
-            return false;
+                return x.systemProfile?.name == y.systemProfile?.name;
             }
 
             public int GetHashCode([DisallowNull] Root obj)
