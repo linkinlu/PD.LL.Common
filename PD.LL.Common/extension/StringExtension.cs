@@ -311,3 +311,18 @@ public static class StringExtension
         return ChineseConst.ChinesePinYin.Substring(index + 1, 1);
     }
 }
+
+namespace PD.LYY.UtilityLib
+{
+    public enum StringFilter
+
+
+    {
+        Alpha = 1,
+        Numeric = 2 ,
+        FloatNumeric = 4 ,
+        ExtraSpaces  =  8
+
+
+    }
+}

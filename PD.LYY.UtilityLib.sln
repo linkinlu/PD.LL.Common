@@ -5,6 +5,8 @@ VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PD.LYY.UtilityLib", "PD.LL.Common\PD.LYY.UtilityLib.csproj", "{05477619-66D4-4883-B7E6-628D670B0763}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pd.LYL.UtilitylibTest", "Pd.LYL.UtilitylibTest\Pd.LYL.UtilitylibTest.csproj", "{6BAE4C24-B4ED-4F22-92C1-13EFD4637166}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{05477619-66D4-4883-B7E6-628D670B0763}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05477619-66D4-4883-B7E6-628D670B0763}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05477619-66D4-4883-B7E6-628D670B0763}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BAE4C24-B4ED-4F22-92C1-13EFD4637166}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BAE4C24-B4ED-4F22-92C1-13EFD4637166}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BAE4C24-B4ED-4F22-92C1-13EFD4637166}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BAE4C24-B4ED-4F22-92C1-13EFD4637166}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

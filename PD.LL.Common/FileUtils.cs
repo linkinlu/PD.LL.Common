@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PD.LYY.UtilityLib
 {
-    public static class File
+    public static class FileUtils
     {
 
         #region ExistsByFile

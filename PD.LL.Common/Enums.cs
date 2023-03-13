@@ -117,7 +117,7 @@ namespace PD.LYY.UtilityLib
         {
             type = Common.GetType(type);
             if (type.IsEnum == false)
-                throw new InvalidOperationException(string.Format(R.TypeNotEnum, type));
+                throw new InvalidOperationException(string.Format("this is not enum,type is {0}", type));
             var result = new List<Item>();
             foreach (var field in type.GetFields())
                 AddItem(type, result, field);
@@ -153,7 +153,7 @@ namespace PD.LYY.UtilityLib
         {
             type = Common.GetType(type);
             if (type.IsEnum == false)
-                throw new InvalidOperationException(string.Format(R.TypeNotEnum, type));
+                throw new InvalidOperationException(string.Format("this is not enum,type is {0}", type));
             var result = new List<string>();
             foreach (var field in type.GetFields())
             {
