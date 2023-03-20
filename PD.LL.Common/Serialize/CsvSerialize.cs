@@ -15,7 +15,7 @@ namespace PD.LYY.UtilityLib.Serialize
         {
             if(string.IsNullOrEmpty(data)) return default(T);
 
-            return data.CsvToObj();
+            return data.CsvToObj<T>();
 
 
         }
@@ -23,9 +23,8 @@ namespace PD.LYY.UtilityLib.Serialize
       
         public  string Serialize<T>(T data)
         {
-            var allProperties = ReflectionUtils.GetAllProperties<T>();
-
-            return default(string);
+          
+            return data.ToCsvString();
         }
     }
 }

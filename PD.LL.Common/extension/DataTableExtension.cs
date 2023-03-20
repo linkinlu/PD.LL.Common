@@ -5,29 +5,69 @@ using System.Text;
 
 namespace PD.LYY.UtilityLib.extension
 {
-    public class DataTableExtension
+    public static class DataTableExtension
     {
-        //public static Utilities.IO.FileFormats.Delimited.Delimited ToDelimitedFile(this DataTable Data, string Delimiter = ",")
-        //{
-        //    var ReturnValue = new Utilities.IO.FileFormats.Delimited.Delimited("", Delimiter);
-        //    if (Data == null)
-        //        return ReturnValue;
-        //    var TempRow = new FileFormats.Delimited.Row(Delimiter);
-        //    foreach (DataColumn Column in Data.Columns)
-        //    {
-        //        TempRow.Add(new Utilities.IO.FileFormats.Delimited.Cell(Column.ColumnName));
-        //    }
-        //    ReturnValue.Add(TempRow);
-        //    foreach (DataRow Row in Data.Rows)
-        //    {
-        //        TempRow = new Utilities.IO.FileFormats.Delimited.Row(Delimiter);
-        //        for (int x = 0; x < Data.Columns.Count; ++x)
-        //        {
-        //            TempRow.Add(new Utilities.IO.FileFormats.Delimited.Cell(Row.ItemArray[x].ToString()));
-        //        }
-        //        ReturnValue.Add(TempRow);
-        //    }
-        //    return ReturnValue;
-        //}
+        public static string ToDelimitedFile(this DataTable dt, string Delimiter = ",")
+        {
+
+            if (null == dt)
+                return string.Empty;
+
+            StringBuilder csvText = new StringBuilder();
+            StringBuilder csvrowText = new StringBuilder();
+            foreach (DataColumn dc in dt.Columns)
+            {
+                csvrowText.Append(Delimiter);
+                csvrowText.Append(dc.ColumnName);
+            }
+            csvText.AppendLine(csvrowText.ToString().Substring(1));
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                csvrowText = new StringBuilder();
+                foreach (DataColumn dc in dt.Columns)
+                {
+                    csvrowText.Append(Delimiter);
+                    csvrowText.Append(dr[dc.ColumnName].ToString().Replace(',', ' '));
+                }
+                csvText.AppendLine(csvrowText.ToString().Substring(1));
+            }
+
+          return csvText.ToString();
+        }
+
+
+        public static List<T> ToEntities<T>(this DataTable table) where T : new()
+        {
+            List<T> entities = new List<T>();
+            if (table == null)
+                return null;
+            foreach (DataRow row in table.Rows)
+            {
+                T entity = new T();
+                foreach (var item in entity.GetType().GetProperties())
+                {
+                    if (table.Columns.Contains(item.Name))
+                    {
+                        if (DBNull.Value != row[item.Name])
+                        {
+                            Type newType = item.PropertyType;
+                        
+                            if (newType.IsGenericType
+                                    && newType.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))
+                            {
+                          
+                                System.ComponentModel.NullableConverter nullableConverter = new System.ComponentModel.NullableConverter(newType);
+                                newType = nullableConverter.UnderlyingType;
+                            }
+                            item.SetValue(entity, Convert.ChangeType(row[item.Name], newType), null);
+                        }
+                    }
+                }
+                entities.Add(entity);
+            }
+            return entities;
+        }
+
     }
 }

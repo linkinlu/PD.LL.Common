@@ -20,16 +20,19 @@ namespace Pd.LYL.UtilitylibTest
         [Test]
         public void Test1()
         {
-            var bb = SerializeManageWrapper.Serilize(new List<Item>() { new Item("a", 1), new Item("b", "b") });
+            var bb = SerializeManageWrapper.Serilize(new List<Temp1>() { new Temp1() { A = "a", B = 2 }, new Temp1() { A = "b" } });
             var cc = SerializeManageWrapper.Serilize(new List<Temp1>() { new Temp1() { A = "a", B = 2 }, new Temp1() { A = "b" } }, type: "xml");
+            var dd = SerializeManageWrapper.Serilize(new List<Temp1>() { new Temp1() { A = "a", B = 2 }, new Temp1() { A = "b" } }, type: "csv");
 
 
         }
     }
     [Serializable]
     [DataContract]
-    public class Temp1 { 
+    public class Temp1 {
+        [DataMember]
         public string A { get; set; }
+        [DataMember]
         public int? B { get; set; }
     }
 }
