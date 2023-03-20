@@ -9,10 +9,10 @@ using System.Text.RegularExpressions;
 public static class StringExtension
 {
 
-    public static string CsvToObj(this string str)
+    public static T CsvToObj<T>(this string str)
     {
 
-        return string.Empty;
+        return default(T);
     }
 
     public static string Join<T>(IEnumerable<T> values, string quotes = "", string separator = ",")

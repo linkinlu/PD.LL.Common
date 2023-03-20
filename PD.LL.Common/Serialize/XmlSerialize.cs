@@ -6,11 +6,13 @@ using System.Xml.Serialization;
 
 namespace PD.LYY.UtilityLib.Serialize
 {
-    public class XmlSerialize : SerializeBase
+    public class XmlSerialize : ISerializeBase
     {
-        public override string FileExtension { get => "xml"; }
+        public  string FileExtension { get => "xml"; }
 
-        public override T Deserialize<T>(string data)
+        public  List<char> StartOfContent => new List<char>() { '<' };
+
+        public  T Deserialize<T>(string data)
         {
           if(string.IsNullOrEmpty(data)) return default(T);
 
@@ -23,7 +25,7 @@ namespace PD.LYY.UtilityLib.Serialize
 
       
 
-        public override string Serialize<T>(T data)
+        public  string Serialize<T>(T data)
         {
             if (data == null) return string.Empty;
 

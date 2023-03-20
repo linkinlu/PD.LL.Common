@@ -1,25 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace PD.LYY.UtilityLib.Serialize
 {
-    public class CsvSerialize : SerializeBase
+    public class CsvSerialize : ISerializeBase
     {
-        public override string FileExtension { get => "csv"; }
+        public  string FileExtension { get => "csv"; }
 
-        public override T Deserialize<T>(string data)
+        public  List<char> StartOfContent => throw new NotImplementedException();
+
+        public  T Deserialize<T>(string data)
         {
             if(string.IsNullOrEmpty(data)) return default(T);
 
-            return default(T);
+            return data.CsvToObj();
 
 
         }
 
       
-        public override string Serialize<T>(T data)
+        public  string Serialize<T>(T data)
         {
+            var allProperties = ReflectionUtils.GetAllProperties<T>();
+
             return default(string);
         }
     }

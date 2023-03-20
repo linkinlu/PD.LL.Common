@@ -6,11 +6,19 @@ using System.Text;
 
 namespace PD.LYY.UtilityLib.Serialize
 {
-    public class JsonSerialize : SerializeBase
+    public class JsonSerialize : ISerializeBase
     {
-        public override string FileExtension { get => "json"; }
+        public   List<char> StartOfContent
+        {
+            get
+            {
+                return new List<char>() { '{', '[' };
+            }
+        }
 
-        public override T Deserialize<T>(string data)
+        public  string FileExtension { get => "json"; }
+
+        public  T Deserialize<T>(string data)
         {
             if(string.IsNullOrEmpty(data)) return default(T);
 
@@ -21,7 +29,7 @@ namespace PD.LYY.UtilityLib.Serialize
             }
         }
 
-        public override string Serialize<T>(T data)
+        public  string Serialize<T>(T data)
         {
             if (data == null ) return string.Empty;
 

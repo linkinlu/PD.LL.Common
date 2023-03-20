@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 
@@ -10,6 +11,10 @@ namespace PD.LYY.UtilityLib
 
     public static class ReflectionUtils
     {
+        public static List<PropertyInfo> GetAllProperties<T>()
+        {
+            return typeof(T).GetProperties().ToList();
+        }
 
         #region GetDescription(获取描述)
 
@@ -129,11 +134,20 @@ namespace PD.LYY.UtilityLib
         /// </summary>
         /// <typeparam name="TFind">查找类型</typeparam>
         /// <param name="assemblies">待查找的程序集列表</param>
-        public static List<Type> FindImplementTypes<TFind>(params Assembly[] assemblies)
-        {
-            return FindImplementTypes(typeof(TFind), assemblies);
-        }
+        //public static List<Type> FindImplementTypes<TFind>(params Assembly[] assemblies)
+        //{
+        //    return FindImplementTypes(typeof(TFind), assemblies);
+        //}
 
+        /// <summary>
+        /// 在指定的程序集中查找实现类型列表
+        /// </summary>
+        /// <typeparam name="TFind">查找类型</typeparam>
+        /// <param name="assemblies">待查找的程序集列表</param>
+        public static List<TFind> FindImplementTypes<TFind>(params Assembly[] assemblies)
+        {
+            return FindImplementTypes(typeof(TFind), assemblies).Select(g => (TFind)Activator.CreateInstance(g)).ToList();
+        }
         /// <summary>
         /// 在指定的程序集中查找实现类型列表
         /// </summary>
@@ -142,10 +156,16 @@ namespace PD.LYY.UtilityLib
         public static List<Type> FindImplementTypes(Type findType, params Assembly[] assemblies)
         {
             var result = new List<Type>();
+            if (!assemblies.IsNotEmpty()) {
+
+                assemblies = new Assembly[1] { findType.Assembly };
+            }
             foreach (var assembly in assemblies)
                 result.AddRange(GetTypes(findType, assembly));
             return result.Distinct().ToList();
         }
+
+
 
         /// <summary>
         /// 获取类型列表

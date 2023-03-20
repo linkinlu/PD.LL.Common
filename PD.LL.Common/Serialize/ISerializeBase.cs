@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace PD.LYY.UtilityLib.Serialize
 {
-    public abstract class SerializeBase
+    public  interface ISerializeBase
     {
+          List<char> StartOfContent { get; }
         //public abstract string ContentType { get; set; }
-        public abstract string FileExtension { get; }
+          string FileExtension { get; }
 
-        public abstract T Deserialize<T>(string data);
+          T Deserialize<T>(string data);
 
-        public abstract string Serialize<T>(T data);
+          string Serialize<T>(T data);
     }
 }
