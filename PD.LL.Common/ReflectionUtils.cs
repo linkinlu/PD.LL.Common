@@ -294,6 +294,20 @@ namespace PD.LYY.UtilityLib
                    || typeDefinition == typeof(List<>);
         }
 
+        public static Type GetGenericTyepIfTypeIsCollection(Type type)
+        {
+            if (IsGenericCollection(type))
+            {
+                return type.GetGenericArguments()[0];
+            }
+            else
+            {
+                return null;
+            }
+            
+        }
+
+
         #endregion
 
         #region IsBool(是否布尔类型)

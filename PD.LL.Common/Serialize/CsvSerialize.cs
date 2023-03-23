@@ -9,7 +9,7 @@ namespace PD.LYY.UtilityLib.Serialize
     {
         public  string FileExtension { get => "csv"; }
 
-        public  List<char> StartOfContent => throw new NotImplementedException();
+        public List<char> StartOfContent => new List<char>();
 
         public  T Deserialize<T>(string data)
         {

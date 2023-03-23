@@ -5,6 +5,10 @@ using System.Collections;
 using System.Data;
 using System.Reflection;
 using PD.LYY.UtilityLib.extension;
+using CsvHelper;
+using System.IO;
+using System.Globalization;
+using System.Text;
 
 public static class GenericObjectExtensions
 {
@@ -56,14 +60,34 @@ public static class GenericObjectExtensions
         var isCollection = ReflectionUtils.IsCollection(typeof(T));
         if (isCollection)
         {
-            //TODO
-            return new List<T>() { obj }.ToDataTable().ToDelimitedFile();
+            var data = ((IEnumerable)obj);
+            var aa = new int[6];
+            using (MemoryStream ms = new MemoryStream())
+            {
+
+                using (var writer = new StreamWriter(ms))
+                using (CsvWriter csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture))
+                {
+                    csvWriter.WriteRecords(data); 
+                }
+                return Encoding.UTF8.GetString(ms.ToArray());
+            } //return ((IEnumerable)obj).ToDataTable().ToDelimitedFile();
         }
         else
         {
-            return new List<T>() { obj }.ToDataTable().ToDelimitedFile();
+            using (MemoryStream ms = new MemoryStream())
+            {
+
+                using (var writer = new StreamWriter(ms))
+                using (CsvWriter csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture))
+                {
+                    csvWriter.WriteRecords(new List<T>() { obj });
+                }
+                return Encoding.UTF8.GetString(ms.ToArray());
+            }
+           // return new List<T>() { obj }.ToDataTable().ToDelimitedFile();;
         }
-        
+
 
     }
 }

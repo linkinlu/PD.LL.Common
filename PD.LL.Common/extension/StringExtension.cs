@@ -1,6 +1,9 @@
+using CsvHelper;
 using PD.LYY.UtilityLib;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -11,8 +14,42 @@ public static class StringExtension
 
     public static T CsvToObj<T>(this string str)
     {
+        if (ReflectionUtils.IsGenericCollection(typeof(T)))
+        {
 
-        return default(T);
+            using (MemoryStream ms = new MemoryStream())
+            {
+                using (var writer = new StreamReader(ms))
+                using (var csvReader = new CsvReader(writer, CultureInfo.InvariantCulture))
+                {
+                    return (T)csvReader.GetRecords<T>();
+                }
+            }
+        }
+        else
+        {
+            using (MemoryStream ms = new MemoryStream(str.ToBytes()))
+            {
+
+
+                using (var writer = new StreamReader(ms))
+                using (var csvReader = new CsvReader(writer, CultureInfo.InvariantCulture))
+                {
+                    var data = csvReader.GetRecords<T>();
+                    return default(T);
+                }
+
+            }
+
+        }
+
+    }
+
+    public static byte[] ToBytes(this string str)
+    {
+
+        return !str.IsEmpty() ? Encoding.UTF8.GetBytes(str) : new byte[0];
+
     }
 
     public static string Join<T>(IEnumerable<T> values, string quotes = "", string separator = ",")

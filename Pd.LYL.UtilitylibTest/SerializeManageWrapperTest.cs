@@ -23,6 +23,7 @@ namespace Pd.LYL.UtilitylibTest
             var bb = SerializeManageWrapper.Serilize(new List<Temp1>() { new Temp1() { A = "a", B = 2 }, new Temp1() { A = "b" } });
             var cc = SerializeManageWrapper.Serilize(new List<Temp1>() { new Temp1() { A = "a", B = 2 }, new Temp1() { A = "b" } }, type: "xml");
             var dd = SerializeManageWrapper.Serilize(new List<Temp1>() { new Temp1() { A = "a", B = 2 }, new Temp1() { A = "b" } }, type: "csv");
+            SerializeManageWrapper.Deserilize<Temp1>(dd, "csv");
 
 
         }

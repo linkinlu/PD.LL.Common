@@ -29,16 +29,22 @@ namespace PD.LYY.UtilityLib.Serialize
         }
 
 
-        public static T Deserilize<T>(string data)
+        public static T Deserilize<T>(string data,string type)
         {
             if (data.IsEmpty()) return default(T);
             List<ISerializeBase> allImplementTypes = GetImplementSerilizeBases();
-
-            var serilizeType = allImplementTypes.FirstOrDefault(g => g.StartOfContent.Contains(data.First()));
+            ISerializeBase serilizeType = null;
+            if (!type.IsEmpty())
+            {
+                serilizeType = allImplementTypes.FirstOrDefault(g => g.FileExtension.Equals(type));
+            }
+            else
+            {
+                serilizeType = allImplementTypes.FirstOrDefault(g => g.StartOfContent.Contains(data.First()));
+            }
             if (serilizeType != null)
             {
                 return serilizeType.Deserialize<T>(data);
-
             }
             else
             {
