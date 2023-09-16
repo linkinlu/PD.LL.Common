@@ -8,19 +8,20 @@ namespace PD.LYY.UtilityLib.Serialize
     {
         public override string FileExtension { get => "csv"; }
 
-        public override T Deserialize<T>(string data)
+        public  override T Deserialize<T>(string data)
         {
             if(string.IsNullOrEmpty(data)) return default(T);
 
-             
-            
-            
+            return data.CsvToObj<T>();
+
+
         }
 
       
         public override string Serialize<T>(T data)
         {
-            
+          
+            return data.ToCsvString();
         }
     }
 }

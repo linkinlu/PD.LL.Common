@@ -1,20 +1,54 @@
 using PD.LYY.UtilityLib;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using CsvHelper;
 
 public static class StringExtension
 {
 
-    public static string CsvToObj(this string str)
+    public static T CsvToObj<T>(this string str)
+    {
+        if (ReflectionUtils.IsGenericCollection(typeof(T)))
+        {
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                using (var writer = new StreamReader(ms))
+                using (var csvReader = new CsvReader(writer, CultureInfo.InvariantCulture))
+                {
+                    return (T)csvReader.GetRecords<T>();
+                }
+            }
+        }
+        else
+        {
+            using (MemoryStream ms = new MemoryStream(str.ToBytes()))
+            {
+
+
+                using (var writer = new StreamReader(ms))
+                using (var csvReader = new CsvReader(writer, CultureInfo.InvariantCulture))
+                {
+                    var data = csvReader.GetRecords<T>();
+                    return default(T);
+                }
+
+            }
+
+        }
+
+    }
+    public static byte[] ToBytes(this string str)
     {
 
-        return string.Empty;
+        return str.IsNotEmpty() ? Encoding.UTF8.GetBytes(str) : new byte[0];
+
     }
-
-
     public static string MaskLeft(this string Input, int EndPosition = 4, char Mask = '#')
     {
         string Appending = "";

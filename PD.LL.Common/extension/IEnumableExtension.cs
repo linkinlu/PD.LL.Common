@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 public static class IEnumableExtension
 {
-    public static bool HasData<T>(this IEnumerable<T> data)
+    public static bool IsNotEmpty<T>(this IEnumerable<T> data)
     {
         return data != null && data.Any();
     }
     public static IEnumerable<T> Concat<T>(this IEnumerable<T> data, IEnumerable<T> others)
     {
-        if (data.HasData() && others.HasData())
+        if (data.IsNotEmpty() && others.IsNotEmpty())
         {
             return data.Concat(others);
         }
@@ -46,7 +46,7 @@ public static class IEnumableExtension
 
       public static IEnumerable<T> ElementsBetween<T>(this IEnumerable<T> List, int Start, int End)
       {
-          if (!List.HasData())
+          if (!List.IsNotEmpty())
               return List;
 
 
