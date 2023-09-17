@@ -5,9 +5,12 @@ using System.Linq.Expressions;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using PD.LYY.UtilityLib.Model;
+using PD.LYY.UtilityLib;
+using ConditionType = PD.LL.Common.Model.ConditionType;
+using DataPermissionConditionDto = PD.LL.Common.Model.DataPermissionConditionDto;
 
-namespace PD.LYY.UtilityLib.extension
+
+namespace PD.LL.Common.Extension
 {
    
     public static class LamdaExtension
@@ -330,7 +333,7 @@ namespace PD.LYY.UtilityLib.extension
         /// 获取查询操作符,范例：t => t.Name == "A",返回 Operator.Equal
         /// </summary>
         /// <param name="expression">表达式,范例：t => t.Name == "A"</param>
-        public static Operator? GetOperator(Expression expression)
+        public static Model.Operator? GetOperator(Expression expression)
         {
             if (expression == null)
                 return null;
@@ -341,17 +344,17 @@ namespace PD.LYY.UtilityLib.extension
                 case ExpressionType.Convert:
                     return GetOperator(((UnaryExpression)expression).Operand);
                 case ExpressionType.Equal:
-                    return Operator.Equal;
+                    return Model.Operator.Equal;
                 case ExpressionType.NotEqual:
-                    return Operator.NotEqual;
+                    return Model.Operator.NotEqual;
                 case ExpressionType.GreaterThan:
-                    return Operator.Greater;
+                    return Model.Operator.Greater;
                 case ExpressionType.LessThan:
-                    return Operator.Less;
+                    return Model.Operator.Less;
                 case ExpressionType.GreaterThanOrEqual:
-                    return Operator.GreaterEqual;
+                    return Model.Operator.GreaterEqual;
                 case ExpressionType.LessThanOrEqual:
-                    return Operator.LessEqual;
+                    return Model.Operator.LessEqual;
                 case ExpressionType.Call:
                     return GetMethodCallExpressionOperator(expression);
             }
@@ -361,17 +364,17 @@ namespace PD.LYY.UtilityLib.extension
         /// <summary>
         /// 获取方法调用表达式的值
         /// </summary>
-        private static Operator? GetMethodCallExpressionOperator(Expression expression)
+        private static Model.Operator? GetMethodCallExpressionOperator(Expression expression)
         {
             var methodCallExpression = (MethodCallExpression)expression;
             switch (methodCallExpression?.Method?.Name?.ToLower())
             {
                 case "contains":
-                    return Operator.Contains;
+                    return Model.Operator.Contains;
                 case "endswith":
-                    return Operator.Ends;
+                    return Model.Operator.Ends;
                 case "startswith":
-                    return Operator.Starts;
+                    return Model.Operator.Starts;
             }
             return null;
         }
@@ -719,7 +722,7 @@ namespace PD.LYY.UtilityLib.extension
         /// <param name="propertyName">属性名</param>
         /// <param name="value">值</param>
         /// <param name="operator">运算符</param>
-        public static Expression<Func<T, bool>> ParsePredicate<T>(string propertyName, object value, Operator @operator)
+        public static Expression<Func<T, bool>> ParsePredicate<T>(string propertyName, object value, Model.Operator @operator)
         {
             var parameter = CreateParameter<T>();
             return parameter.Property(propertyName).Operation(@operator, value).ToPredicate<T>(parameter);
@@ -752,7 +755,7 @@ namespace PD.LYY.UtilityLib.extension
             }
             else
             {
-                Operator Operator = rule.Operator;
+                Model.Operator Operator = rule.Operator;
                 string field = rule.ConditionName;
                 string[] value = rule.ConditionValues;
                 var hasSub = field.Split('.');
@@ -774,7 +777,7 @@ namespace PD.LYY.UtilityLib.extension
                 var val = GetValue(rule);
 
 
-                if (Operator == Operator.In)
+                if (Operator == Model.Operator.In)
                 {
                     if (rule.ConditionType == ConditionType.DateTime)
                     {
@@ -796,7 +799,7 @@ namespace PD.LYY.UtilityLib.extension
                         left = Expression.And(left, right);
                     }
                 }
-                else if (Operator == Operator.NotIn)
+                else if (Operator == Model.Operator.NotIn)
                 {
                     if (rule.ConditionType == ConditionType.DateTime)
                     {
@@ -820,7 +823,7 @@ namespace PD.LYY.UtilityLib.extension
                     }
                 }
 
-                else if (Operator == Operator.Equal)
+                else if (Operator == Model.Operator.Equal)
                 {
                     if (rule.ConditionType == ConditionType.DateTime)
                     {
@@ -840,48 +843,48 @@ namespace PD.LYY.UtilityLib.extension
                         left = Expression.And(left, right);
                     }
                 }
-                else if (Operator == Operator.Contains)
+                else if (Operator == Model.Operator.Contains)
                 {
                     //  var toCompare = Expression.Constant(val, properType);
 
                     var right = Contains<T>(field, val);
                     left = Expression.And(left, right);
                 }
-                else if (Operator == Operator.GreaterEqual)
+                else if (Operator == Model.Operator.GreaterEqual)
                 {
                     var toCompare = Expression.Constant(val, properType);
                     var right = Expression.GreaterThanOrEqual(property, toCompare);
                     left = Expression.And(left, right);
                 }
-                else if (Operator == Operator.Greater)
+                else if (Operator == Model.Operator.Greater)
                 {
 
                     var toCompare = Expression.Constant(val, properType);
                     var right = Expression.GreaterThan(property, toCompare);
                     left = Expression.And(left, right);
                 }
-                else if (Operator == Operator.Less)
+                else if (Operator == Model.Operator.Less)
                 {
 
                     var toCompare = Expression.Constant(val, properType);
                     var right = Expression.LessThan(property, toCompare);
                     left = Expression.And(left, right);
                 }
-                else if (Operator == Operator.LessEqual)
+                else if (Operator == Model.Operator.LessEqual)
                 {
 
                     var toCompare = Expression.Constant(val, properType);
                     var right = Expression.LessThanOrEqual(property, toCompare);
                     left = Expression.And(left, right);
                 }
-                else if (Operator == Operator.Starts)
+                else if (Operator == Model.Operator.Starts)
                 {
 
                     //  var toCompare = Expression.Constant(val, properType);
                     var right = Starts<T>(field, val);
                     left = Expression.And(left, right);
                 }
-                else if (Operator == Operator.Ends)
+                else if (Operator == Model.Operator.Ends)
                 {
 
                     //var toCompare = Expression.Constant(val, properType);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 
-namespace PD.LYY.UtilityLib
+namespace PD.LL.Common.Model
 {
     public enum Operator
     {
@@ -64,4 +64,43 @@ namespace PD.LYY.UtilityLib
         NotIn,
     }
 
+    public enum ConditionUnit
+    {
+        Year,
+        Month,
+        Day,
+    }
+
+    public enum ConditionType
+    {
+        DateTime,
+        Boolean,
+        PlainText,
+        Number
+    }
+    
+    
+    [Flags]
+    public enum StringFilter
+    {
+        /// <summary>
+        /// Alpha characters
+        /// </summary>
+        Alpha = 1,
+
+        /// <summary>
+        /// Numeric characters
+        /// </summary>
+        Numeric = 2,
+
+        /// <summary>
+        /// Numbers with period, basically allows for decimal point
+        /// </summary>
+        FloatNumeric = 4,
+
+        /// <summary>
+        /// Multiple spaces
+        /// </summary>
+        ExtraSpaces = 8
+    }
 }

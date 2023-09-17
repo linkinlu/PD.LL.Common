@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Text;
 
-namespace PD.LYY.UtilityLib.Serialize
+namespace PD.LL.Common.Serialize
 {
     public class JsonSerialize : SerializeBase
     {

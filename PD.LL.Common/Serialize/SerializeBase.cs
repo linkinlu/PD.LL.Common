@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PD.LYY.UtilityLib.Serialize
+namespace PD.LL.Common.Serialize
 {
     public abstract class SerializeBase
     {

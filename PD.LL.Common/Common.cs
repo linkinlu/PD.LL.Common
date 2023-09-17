@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace PD.LYY.UtilityLib
+namespace PD.LL.Common
 {
     public static class Common
     {

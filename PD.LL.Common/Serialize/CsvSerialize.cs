@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using PD.LL.Common.Extension;
 
-namespace PD.LYY.UtilityLib.Serialize
+namespace PD.LL.Common.Serialize
 {
     public class CsvSerialize : SerializeBase
     {

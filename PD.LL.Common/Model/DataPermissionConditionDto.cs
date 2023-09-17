@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Expressions;
+using PD.LL.Common;
 
-namespace PD.LYY.UtilityLib.Model
+
+namespace PD.LL.Common.Model
 {
     public class DataPermissionConditionDto : DataPermissionCondition
     {
@@ -11,37 +13,17 @@ namespace PD.LYY.UtilityLib.Model
         public string[] ConditionValues { get; set; }
     }
 
-    public class DataPermissionCondition 
+    public class DataPermissionCondition
     {
         public string ConditionId { get; set; }
         public Operator Operator { get; set; }
-      
+
         public ConditionUnit ConditionUnit { get; set; }
         public BinaryExpression GroupOperator { get; set; }
         public string ParentId { get; set; }
- 
+
         public bool IsConditionGroup { get; set; }
     }
-
-    public enum ConditionUnit
-    {
-        Year,
-        Month,
-        Day,
-    }
-
-    public enum ConditionType
-    {
-        DateTime ,
-        Boolean,
-        PlainText,
-        Number
-    }
-
-
-
-
-
 
 
 

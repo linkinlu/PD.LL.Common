@@ -4,9 +4,10 @@ using System.Linq.Expressions;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using PD.LYY.UtilityLib.extension;
+using PD.LL.Common.Model;
 
-namespace PD.LYY.UtilityLib
+
+namespace PD.LL.Common.Extension
 {
     public static class ExpressionExtensions
     {

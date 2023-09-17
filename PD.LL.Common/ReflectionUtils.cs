@@ -5,8 +5,9 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
+using PD.LL.Common.Extension;
 
-namespace PD.LYY.UtilityLib
+namespace PD.LL.Common
 {
 
     public static class ReflectionUtils

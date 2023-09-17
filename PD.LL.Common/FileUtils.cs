@@ -4,8 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PD.LL.Common.Extension;
 
-namespace PD.LYY.UtilityLib
+namespace PD.LL.Common
 {
     public static class FileUtils
     {

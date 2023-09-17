@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace PD.LYY.UtilityLib.Serialize
+namespace PD.LL.Common.Serialize
 {
     public class XmlSerialize : SerializeBase
     {

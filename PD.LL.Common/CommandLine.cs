@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using PD.LL.Common.Extension;
 
-namespace PD.LYY.UtilityLib
+namespace  PD.LL.Common
 {
     public class CommandLine
     {
