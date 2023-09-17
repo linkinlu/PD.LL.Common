@@ -19,10 +19,8 @@ public static class IEnumableExtension
         else
         {
             return data;
-
         }
     }
-
     public static IEnumerable<T> Distinct<T>(this IEnumerable<T> Enumerable, Func<T, T, bool> Predicate)
     {
         var Results = new List<T>();

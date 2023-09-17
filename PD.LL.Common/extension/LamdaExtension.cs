@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using PD.LYY.UtilityLib.Model;
 
 namespace PD.LYY.UtilityLib.extension
 {
@@ -11,6 +13,15 @@ namespace PD.LYY.UtilityLib.extension
     public static class LamdaExtension
     {
 
+        private const string StringStr = "string";
+        private static readonly MethodInfo MethodContains = typeof(Enumerable).GetMethods(
+                BindingFlags.Static | BindingFlags.Public)
+            .Single(m => m.Name == nameof(Enumerable.Contains)
+                         && m.GetParameters().Length == 2);
+        private static readonly string BooleanStr = nameof(Boolean).ToLower();
+        private static readonly string Number = nameof(Number).ToLower();
+        private static readonly string In = nameof(In).ToLower();
+        private static readonly string And = nameof(And).ToLower();
         #region GetType(获取类型)
 
         /// <summary>
@@ -715,5 +726,226 @@ namespace PD.LYY.UtilityLib.extension
         }
 
         #endregion
+
+     //   private static delegate Expression Binder(Expression left, Expression right);
+    public static Expression ParseTree<T>(
+        List<DataPermissionConditionDto> condition,
+        ParameterExpression parm, BinaryExpression parentBinder)
+    {
+        Expression left = null;
+        BinaryExpression binder = parentBinder;
+
+        foreach (var rule in condition)
+        {
+            if (rule.IsConditionGroup)
+            {
+                var subRule = rule.Conditions;
+                if (subRule.IsNotEmpty())
+                {
+                    left = Expression.And(left, ParseTree<T>(subRule.ToList(), parm,
+                        rule.GroupOperator));
+                }
+                else
+                {
+                    continue;
+                }
+            }
+            else
+            {
+                Operator Operator = rule.Operator;
+                string field = rule.ConditionName;
+                string[] value = rule.ConditionValues;
+                var hasSub = field.Split('.');
+                MemberExpression property = null;
+                Type properType = null;
+                if (hasSub.Length > 1)
+                {
+                    property = Expression.Property(parm, hasSub[0]);
+                    property = Expression.PropertyOrField(property, hasSub[1]);
+                    properType = property.Type;
+                }
+                else
+                {
+
+                    property = Expression.Property(parm, hasSub[0]);
+                    properType = property.Type;
+                }
+
+                var val = GetValue(rule);
+
+
+                if (Operator == Operator.In)
+                {
+                    if (rule.ConditionType == ConditionType.DateTime)
+                    {
+                        var date = DateTime.Now.Date.GetDayByConditionUnit(
+                            ConvertManager.To<string, int>(rule.ConditionValues.First()), rule.ConditionUnit);
+                        var toCompare = Expression.Constant(date, properType);
+                        var right = GreaterEqual<T>(field, date); // Expression.GreaterThanOrEqual(property, toCompare);
+                        left = Expression.AndAlso(left, right);
+                    }
+                    else
+                    {
+                        var contains = MethodContains.MakeGenericMethod(typeof(string));
+                        val = value.Select(e => e?.ToString())
+                            .ToList();
+                        var right = Expression.Call(
+                            contains,
+                            Expression.Constant(val),
+                            property);
+                        left = Expression.And(left, right);
+                    }
+                }
+                else if (Operator == Operator.NotIn)
+                {
+                    if (rule.ConditionType == ConditionType.DateTime)
+                    {
+                        var date = DateTime.Now.Date.GetDayByConditionUnit(
+                            ConvertManager.To<string, int>(rule.ConditionValues.First()), rule.ConditionUnit);
+                        var toCompare = Expression.Constant(date, properType);
+                        var right = LessEqual<T>(field, toCompare);
+                        left = Expression.And(left, right);
+                    }
+                    else
+                    {
+                        var contains = MethodContains.MakeGenericMethod(typeof(string));
+                        val = value.Select(e => e?.ToString())
+                            .ToList();
+                        var right = Expression.Not(Expression.Call(
+                            contains,
+                            Expression.Constant(val),
+                            property));
+                        left = Expression.And(left, right);
+                        // }
+                    }
+                }
+
+                else if (Operator == Operator.Equal)
+                {
+                    if (rule.ConditionType == ConditionType.DateTime)
+                    {
+                        var date = ConvertManager.To<string, DateTime>(val.ToString());
+                        var start = date.Date;
+                        var startCompare = Expression.Constant(date, properType);
+                        var startRight = Expression.GreaterThanOrEqual(property, startCompare);
+                        left = Expression.And(left, startRight);
+                        var end = date.Date.AddDays(1);
+                        var endCompare = Expression.Constant(date, properType);
+                        var endRight = Expression.LessThanOrEqual(property, endCompare);
+                        left = Expression.And(left, endRight);
+                    }
+                    else
+                    {
+                        var right = Equal<T>(field, val);
+                        left = Expression.And(left, right);
+                    }
+                }
+                else if (Operator == Operator.Contains)
+                {
+                    //  var toCompare = Expression.Constant(val, properType);
+
+                    var right = Contains<T>(field, val);
+                    left = Expression.And(left, right);
+                }
+                else if (Operator == Operator.GreaterEqual)
+                {
+                    var toCompare = Expression.Constant(val, properType);
+                    var right = Expression.GreaterThanOrEqual(property, toCompare);
+                    left = Expression.And(left, right);
+                }
+                else if (Operator == Operator.Greater)
+                {
+
+                    var toCompare = Expression.Constant(val, properType);
+                    var right = Expression.GreaterThan(property, toCompare);
+                    left = Expression.And(left, right);
+                }
+                else if (Operator == Operator.Less)
+                {
+
+                    var toCompare = Expression.Constant(val, properType);
+                    var right = Expression.LessThan(property, toCompare);
+                    left = Expression.And(left, right);
+                }
+                else if (Operator == Operator.LessEqual)
+                {
+
+                    var toCompare = Expression.Constant(val, properType);
+                    var right = Expression.LessThanOrEqual(property, toCompare);
+                    left = Expression.And(left, right);
+                }
+                else if (Operator == Operator.Starts)
+                {
+
+                    //  var toCompare = Expression.Constant(val, properType);
+                    var right = Starts<T>(field, val);
+                    left = Expression.And(left, right);
+                }
+                else if (Operator == Operator.Ends)
+                {
+
+                    //var toCompare = Expression.Constant(val, properType);
+                    var right = Ends<T>(field, val);
+                    left = Expression.And(left, right);
+                }
+
+            }
+        }
+
+        return left;
+    }
+
+    private static object GetValue(DataPermissionConditionDto searchParameter)
+    {
+      
+
+        switch (searchParameter.ConditionType)
+        {
+            case ConditionType.DateTime:
+                return (ConvertManager.To<string, DateTime?>(searchParameter.ConditionValues.FirstOrDefault()));
+            case ConditionType.Boolean:
+                var value = searchParameter.ConditionValues.FirstOrDefault();
+                if ((bool)value?.Equals("1")) return (true);
+                if ((bool)value?.Equals("0")) return (false);
+                return (ConvertManager.To<string, Boolean?>(searchParameter.ConditionValues.FirstOrDefault()));
+            case ConditionType.Number:
+                return (ConvertManager.To<string, decimal?>(searchParameter.ConditionValues.FirstOrDefault()));
+            case ConditionType.PlainText:
+                return (ConvertManager.To<string, string>(searchParameter.ConditionValues.FirstOrDefault()));
+            default:
+                return (searchParameter?.ConditionValues.FirstOrDefault()?.ToString());
+        }
+    }
+
+
+    public static (Expression<Func<T, bool>>, string) ParseExpressionOf<T>(List<DataPermissionConditionDto> doc,
+        BinaryExpression rootOperator)
+    {
+        var itemExpression = Expression.Parameter(typeof(T));
+        var conditions = ParseTree<T>(doc, itemExpression,
+            rootOperator);
+
+        if (conditions.CanReduce)
+        {
+            conditions = conditions.ReduceAndCheck();
+        }
+
+        var query = Expression.Lambda<Func<T, bool>>(conditions, itemExpression);
+        return (query, conditions.ToString());
+
+    }
+
+    /// <summary>
+    /// 递归expression
+    /// </summary>
+    /// <param name="doc"></param>
+    /// <param name="rootOperator"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static (Func<T, bool>,string) ParsePredicateOf<T>(List<DataPermissionConditionDto> doc,BinaryExpression rootOperator )
+        {
+            var query = ParseExpressionOf<T>(doc, rootOperator);
+            return (query.Item1?.Compile(), query.Item2);
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using PD.LYY.UtilityLib.Model;
 
 public static class DateTimeExtesion
 {
@@ -9,10 +10,24 @@ public static class DateTimeExtesion
         return dt>=from && dt<=to;
     }
 
-    public static bool IsInRangeWithDayUnit(this DateTime dt, DateTime from , DateTime to)
+    // public static bool IsInRangeWithoutTime(this DateTime dt, DateTime from , DateTime to)
+    // {
+    //     return dt.Date>=from.Date && dt<=to.Date;
+    // }
+
+    public static DateTime GetDayByConditionUnit(this DateTime dt, int count, ConditionUnit unit, bool minus= true)
     {
-        return dt.Date>=from.Date && dt<=to.Date;
+        if (count == 0 || dt == DateTime.MinValue) return DateTime.Now;
+
+        switch (unit)
+        {
+            case ConditionUnit.Day: return minus ? dt.Date.AddDays(-count) : dt.Date.AddDays(count);
+            case ConditionUnit.Month: return minus ? dt.Date.AddMonths(-count) : dt.Date.AddMonths(count);
+            case ConditionUnit.Year: return minus ? dt.Date.AddYears(-count) : dt.Date.AddYears(count);
+            default: return minus ? dt.Date.AddDays(-count) : dt.Date.AddDays(count);
+        }
     }
+
     public static string DescriptionBetweenDates(this DateTime startDt , DateTime endDt)
     {
         var timeSpan = endDt - startDt;
