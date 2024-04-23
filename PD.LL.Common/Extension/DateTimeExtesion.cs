@@ -11,12 +11,7 @@ namespace PD.LL.Common.Extension
         {
             return dt >= from && dt <= to;
         }
-
-        // public static bool IsInRangeWithoutTime(this DateTime dt, DateTime from , DateTime to)
-        // {
-        //     return dt.Date>=from.Date && dt<=to.Date;
-        // }
-
+        
         public static DateTime GetDayByConditionUnit(this DateTime dt, int count, ConditionUnit unit, bool minus = true)
         {
             if (count == 0 || dt == DateTime.MinValue) return DateTime.Now;

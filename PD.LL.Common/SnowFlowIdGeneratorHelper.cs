@@ -10,7 +10,7 @@ namespace PD.LYY.UtilityLib
         static SnowFlowIdGeneratorHelper()
         {
             
-            //currently workid is fixed
+      
             var worker =  new IdGeneratorOptions();
             YitIdHelper.SetIdGenerator(worker);
         }
@@ -27,7 +27,6 @@ namespace PD.LYY.UtilityLib
     {
         public static List<NetworkInterface> GetMacAddress() {
             return NetworkInterface.GetAllNetworkInterfaces().ToList();
-
         }
     }
 }

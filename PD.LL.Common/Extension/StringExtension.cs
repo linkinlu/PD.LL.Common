@@ -7,9 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using CsvHelper;
+using NPOI.OpenXml4Net.OPC.Internal;
 using PD.LL.Common.Extension;
 using PD.LL.Common.Model;
-using PD.LYY.UtilityLib;
+
 
 public static class StringExtension
 {
@@ -46,6 +47,23 @@ public static class StringExtension
         }
 
     }
+
+    /// <summary>
+    /// 返回文件拓展名  
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <returns>后缀会包含. 如.pdf</returns>
+    public static string GetFileExtension(this string fileName)
+    {
+        if (File.Exists(fileName))
+        {
+            return new FileInfo(fileName)?.Extension;
+        }
+        return string.Empty;
+    }
+
+
+
     public static byte[] ToBytes(this string str)
     {
 

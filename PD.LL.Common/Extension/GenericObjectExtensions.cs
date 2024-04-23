@@ -18,7 +18,6 @@ namespace PD.LL.Common.Extension
 
         public static T Check<T>(this T Object, Predicate<T> Predicate, T DefaultValue = default(T))
         {
-
             return Predicate(Object) ? Object : DefaultValue;
         }
 
@@ -26,8 +25,7 @@ namespace PD.LL.Common.Extension
         {
             return Object.Check(x => x != null, DefaultValue);
         }
-
-
+        
         public static DataTable ToDataTable<T>(this T[] list)
         {
             DataTable table = new DataTable();
@@ -69,7 +67,7 @@ namespace PD.LL.Common.Extension
             if (isCollection)
             {
                 var data = ((IEnumerable)obj);
-                var aa = new int[6];
+                
                 using (MemoryStream ms = new MemoryStream())
                 {
 
